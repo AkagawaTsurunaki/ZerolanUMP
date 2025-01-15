@@ -27,7 +27,7 @@ class AbstractPipeline(ABC):
 
     def is_pipeline_enable(self):
         if not self.config.enable:
-            raise Exception("The pipeline is disabled in your config!")
+            raise Exception("此管线已被禁用，若要启用，请在配置中将 enable 设为 true")
 
     def check_urls(self):
         """
@@ -58,7 +58,7 @@ class CommonModelPipeline(AbstractPipeline):
     def __init__(self, config: any, model_type: str):
         super().__init__(config, model_type)
         self.urls["predict_url"] = urljoin(config.server_url, f"/{self.model_type}/predict")
-        self.urls["stream_predict_url"] = urljoin(config.server_url, f"/{self.model_type}/stream_predict")
+        self.urls["stream_predict_url"] = urljoin(config.server_url, f"/{self.model_type}/stream-predict")
 
     @abstractmethod
     def predict(self, query: AbstractModelQuery) -> AbstractModelPrediction | None:
