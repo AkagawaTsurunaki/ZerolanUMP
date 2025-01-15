@@ -6,7 +6,7 @@ from loguru import logger
 from pydantic import BaseModel
 from zerolan.data.pipeline.asr import ASRQuery, ASRPrediction, ASRStreamQuery
 
-from src.zerolan.ump.abs_pipeline import CommonModelPipeline
+from zerolan.ump.abs_pipeline import CommonModelPipeline
 from zerolan.ump.common.decorator import pipeline_resolve
 
 
