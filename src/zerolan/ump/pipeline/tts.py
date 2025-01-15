@@ -1,10 +1,9 @@
 import os.path
-from urllib.parse import urljoin
 
 from pydantic import BaseModel
 from zerolan.data.pipeline.tts import TTSQuery, TTSPrediction
 
-from zerolan.ump.abs_pipeline import AbstractPipeline
+from zerolan.ump.abs_pipeline import CommonModelPipeline
 from zerolan.ump.common.decorator import pipeline_resolve
 from zerolan.ump.common.utils.audio_util import check_audio_format
 
@@ -14,13 +13,10 @@ class TTSPipelineConfig(BaseModel):
     server_url: str = "http://127.0.0.1:11006"
 
 
-class TTSPipeline(AbstractPipeline):
+class TTSPipeline(CommonModelPipeline):
 
     def __init__(self, config: TTSPipelineConfig):
-        super().__init__(config)
-        self.predict_url = urljoin(config.server_url, '/tts/predict')
-        self.stream_predict_url = urljoin(config.server_url, f'/tts/stream-predict')
-        self.state_url = urljoin(config.server_url, '/tts/state')
+        super().__init__(config, "tts")
         self.check_urls()
 
     @pipeline_resolve()

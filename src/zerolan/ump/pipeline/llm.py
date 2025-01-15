@@ -1,10 +1,9 @@
-from urllib.parse import urljoin
-
-from zerolan.ump.common.decorator import pipeline_resolve
-from zerolan.ump.abs_pipeline import AbstractPipeline
 from pydantic import BaseModel
 from zerolan.data.pipeline.abs_data import AbstractModelQuery
 from zerolan.data.pipeline.llm import LLMQuery, LLMPrediction
+
+from zerolan.ump.abs_pipeline import CommonModelPipeline
+from zerolan.ump.common.decorator import pipeline_resolve
 
 
 class LLMPipelineConfig(BaseModel):
@@ -12,13 +11,10 @@ class LLMPipelineConfig(BaseModel):
     server_url: str = "http://127.0.0.1:11002"
 
 
-class LLMPipeline(AbstractPipeline):
+class LLMPipeline(CommonModelPipeline):
 
     def __init__(self, config: LLMPipelineConfig):
-        super().__init__(config)
-        self.predict_url = urljoin(config.server_url, '/llm/predict')
-        self.stream_predict_url = urljoin(config.server_url, f'/llm/stream-predict')
-        self.state_url = urljoin(config.server_url, '/llm/state')
+        super().__init__(config, "llm")
         self.check_urls()
 
     @pipeline_resolve()

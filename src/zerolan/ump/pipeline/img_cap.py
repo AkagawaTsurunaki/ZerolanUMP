@@ -1,5 +1,3 @@
-from urllib.parse import urljoin
-
 from pydantic import BaseModel
 from zerolan.data.pipeline.abs_data import AbstractModelQuery
 from zerolan.data.pipeline.img_cap import ImgCapQuery, ImgCapPrediction
@@ -16,10 +14,7 @@ class ImgCapPipelineConfig(BaseModel):
 class ImgCapPipeline(AbstractImagePipeline):
 
     def __init__(self, config: ImgCapPipelineConfig):
-        super().__init__(config)
-        self.predict_url = urljoin(config.server_url, '/img-cap/predict')
-        self.stream_predict_url = urljoin(config.server_url, '/img-cap/stream-predict')
-        self.state_url = urljoin(config.server_url, '/img-cap/state')
+        super().__init__(config, model_type="img-cap")
         self.check_urls()
 
     @pipeline_resolve()

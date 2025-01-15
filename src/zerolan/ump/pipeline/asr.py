@@ -1,13 +1,12 @@
 from http import HTTPStatus
 from typing import Literal
-from urllib.parse import urljoin
 
 import requests
 from loguru import logger
 from pydantic import BaseModel
 from zerolan.data.pipeline.asr import ASRQuery, ASRPrediction, ASRStreamQuery
 
-from src.zerolan.ump.abs_pipeline import AbstractPipeline
+from src.zerolan.ump.abs_pipeline import CommonModelPipeline
 from zerolan.ump.common.decorator import pipeline_resolve
 
 
@@ -19,13 +18,10 @@ class ASRPipelineConfig(BaseModel):
     format: Literal["float32"] = "float32"
 
 
-class ASRPipeline(AbstractPipeline):
+class ASRPipeline(CommonModelPipeline):
 
     def __init__(self, config: ASRPipelineConfig):
-        super().__init__(config)
-        self.predict_url = urljoin(config.server_url, "/asr/predict")
-        self.stream_predict_url = urljoin(config.server_url, '/asr/stream-predict')
-        self.state_url = urljoin(config.server_url, '/asr/state')
+        super().__init__(config, model_type="asr")
         self.check_urls()
 
     @pipeline_resolve()
@@ -33,7 +29,7 @@ class ASRPipeline(AbstractPipeline):
         assert isinstance(query, ASRQuery)
         try:
             files, data = self.parse_query(query)
-            response = requests.post(url=self.predict_url, files=files, data=data)
+            response = requests.post(url=self.urls["predict_url"], files=files, data=data)
 
             if response.status_code == HTTPStatus.OK:
                 prediction = self.parse_prediction(response.content)
@@ -46,7 +42,7 @@ class ASRPipeline(AbstractPipeline):
     @pipeline_resolve()
     def stream_predict(self, query: ASRStreamQuery):
         files, data = self.parse_query(query)
-        response = requests.get(url=self.stream_predict_url, files=files, data=data)
+        response = requests.get(url=self.urls["stream_predict_url"], files=files, data=data)
 
         if response.status_code == HTTPStatus.OK:
             return self.parse_prediction(response.content)

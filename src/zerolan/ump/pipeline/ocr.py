@@ -1,5 +1,4 @@
 from typing import List
-from urllib.parse import urljoin
 
 from pydantic import BaseModel
 from zerolan.data.pipeline.abs_data import AbstractModelQuery
@@ -17,10 +16,7 @@ class OCRPipelineConfig(BaseModel):
 class OCRPipeline(AbstractImagePipeline):
 
     def __init__(self, config: OCRPipelineConfig):
-        super().__init__(config)
-        self.predict_url = urljoin(config.server_url, '/ocr/predict')
-        self.stream_predict_url = urljoin(config.server_url, '/ocr/stream-predict')
-        self.state_url = urljoin(config.server_url, '/ocr/state')
+        super().__init__(config, "ocr")
         self.check_urls()
 
     @pipeline_resolve()

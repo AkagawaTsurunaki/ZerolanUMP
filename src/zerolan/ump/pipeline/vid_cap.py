@@ -1,10 +1,9 @@
 import os
-from urllib.parse import urljoin
 
 from zerolan.data.pipeline.abs_data import AbstractModelQuery
 from zerolan.data.pipeline.vid_cap import VidCapQuery, VidCapPrediction
 
-from zerolan.ump.abs_pipeline import AbstractPipeline
+from zerolan.ump.abs_pipeline import CommonModelPipeline
 from zerolan.ump.common.decorator import pipeline_resolve
 
 
@@ -13,17 +12,14 @@ class VidCapPipelineConfig:
     server_url: str = "http://127.0.0.1:11005"
 
 
-class VidCapPipeline(AbstractPipeline):
+class VidCapPipeline(CommonModelPipeline):
 
     def __init__(self, config: VidCapPipelineConfig):
         """
         此接口保留，但是可能会在将来废弃而放弃维护
         :param config:
         """
-        super().__init__(config)
-        self.predict_url = urljoin(config.server_url, '/vid-cap/predict')
-        self.stream_predict_url = urljoin(config.server_url, '/vid-cap/stream-predict')
-        self.state_url = urljoin(config.server_url, '/vid-cap/state')
+        super().__init__(config, "vid-cap")
         self.check_urls()
 
     @pipeline_resolve()
