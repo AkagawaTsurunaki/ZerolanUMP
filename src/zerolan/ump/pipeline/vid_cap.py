@@ -1,5 +1,6 @@
 import os
 
+from pydantic import BaseModel
 from zerolan.data.pipeline.abs_data import AbstractModelQuery
 from zerolan.data.pipeline.vid_cap import VidCapQuery, VidCapPrediction
 
@@ -7,7 +8,7 @@ from zerolan.ump.abs_pipeline import CommonModelPipeline
 from zerolan.ump.common.decorator import pipeline_resolve
 
 
-class VidCapPipelineConfig:
+class VidCapPipelineConfig(BaseModel):
     enable: bool = True
     server_url: str = "http://127.0.0.1:11005"
 
