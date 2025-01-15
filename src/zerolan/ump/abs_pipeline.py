@@ -8,7 +8,7 @@ from pydantic import BaseModel
 from zerolan.data.data.state import AppStatusEnum, ServiceState
 from zerolan.data.pipeline.abs_data import AbsractImageModelQuery, AbstractModelQuery, AbstractModelPrediction
 
-from src.zerolan.common.web_util import is_valid_url
+from zerolan.ump.common.utils.web_util import is_valid_url
 
 
 class AbstractPipeline(ABC):
