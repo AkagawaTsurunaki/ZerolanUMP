@@ -2,7 +2,10 @@ import json
 from functools import wraps
 
 from loguru import logger
+from pydantic import ValidationError
 from requests import HTTPError
+
+from zerolan.ump.common.utils.web_util import is_html_string
 
 json_decode_err_msg = """
 管线解码 JSON 时遇到异常。你可以尝试：
@@ -27,6 +30,12 @@ http_err_404_msg = """
 你可以在 Issue 里描述该问题。
 """
 
+html_content_err_msg = """
+返回的内容不是 JSON 字符串，而可能是一个 HTML 网页？！
+1. 请检查你的服务器是否被权限校验、防火墙或其他组件拦截。
+2. 检查你的 Nginx 配置是否正确。
+"""
+
 
 def pipeline_resolve():
     """
@@ -43,6 +52,9 @@ def pipeline_resolve():
             except Exception as e:
                 if isinstance(e, json.decoder.JSONDecodeError):
                     logger.error(json_decode_err_msg)
+                elif isinstance(e, ValidationError):
+                    if is_html_string(e.json()):
+                        logger.error(html_content_err_msg)
                 elif isinstance(e, ConnectionError):
                     logger.error(conn_err_msg)
                 elif isinstance(e, HTTPError):
