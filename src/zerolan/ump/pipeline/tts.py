@@ -4,6 +4,7 @@ import uuid
 import requests
 from pydantic import BaseModel
 from zerolan.data.pipeline.tts import TTSQuery, TTSPrediction, TTSStreamPrediction
+from zerolan.ump.common.utils.audio_util import check_audio_format
 
 from zerolan.ump.abs_pipeline import CommonModelPipeline
 from zerolan.ump.common.decorator import pipeline_resolve
@@ -46,5 +47,6 @@ class TTSPipeline(CommonModelPipeline):
     def parse_query(self, query: any) -> dict:
         return super().parse_query(query)
 
-    def parse_prediction(self, prediction: any) -> TTSPrediction:
-        raise NotImplementedError()
+    def parse_prediction(self, data: any) -> TTSPrediction:
+        audio_type = check_audio_format(data)
+        return TTSPrediction(wave_data=data, audio_type=audio_type)
