@@ -8,7 +8,7 @@ packages = [{include = "zerolan", from = "src"}]
 
 [tool.poetry.dependencies]
 python = "^3.10"
-openai = "1.66.3"
+openai = "^1.66.3"
 
 
 [build-system]
