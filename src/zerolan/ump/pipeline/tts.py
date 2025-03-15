@@ -1,10 +1,10 @@
 import os.path
 import uuid
+from http import HTTPStatus
 
 import requests
 from pydantic import BaseModel
 from zerolan.data.pipeline.tts import TTSQuery, TTSPrediction, TTSStreamPrediction
-from zerolan.ump.common.utils.audio_util import check_audio_format
 
 from zerolan.ump.abs_pipeline import CommonModelPipeline
 from zerolan.ump.common.decorator import pipeline_resolve
@@ -25,7 +25,13 @@ class TTSPipeline(CommonModelPipeline):
     def predict(self, query: TTSQuery) -> TTSPrediction | None:
         if os.path.exists(query.refer_wav_path):
             query.refer_wav_path = os.path.abspath(query.refer_wav_path)
-        return super().predict(query)
+        query_dict = self.parse_query(query)
+        response = requests.post(url=self.urls["predict_url"], stream=True, json=query_dict)
+        if response.status_code == HTTPStatus.OK:
+            prediction = TTSPrediction(wave_data=response.content, audio_type=query.audio_type)
+            return prediction
+        else:
+            response.raise_for_status()
 
     @pipeline_resolve()
     def stream_predict(self, query: TTSQuery):
@@ -47,6 +53,5 @@ class TTSPipeline(CommonModelPipeline):
     def parse_query(self, query: any) -> dict:
         return super().parse_query(query)
 
-    def parse_prediction(self, data: any) -> TTSPrediction:
-        audio_type = check_audio_format(data)
-        return TTSPrediction(wave_data=data, audio_type=audio_type)
+    def parse_prediction(self, data: any) -> any:
+        return super().parse_prediction(data)
