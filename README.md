@@ -8,3 +8,4 @@ ZerolanUMP 是基于 [ZerolanCore](https://github.com/AkagawaTsurunaki/zerolan-c
 **ChangeLog:**
 
 [2025/2/19] LLMPipeline 已支持 Kimi 和 DeepSeek 的 API。
+[2025/3/15] TTSPipeline 已支持流式推理。
