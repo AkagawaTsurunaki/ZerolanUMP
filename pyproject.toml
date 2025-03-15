@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "zerolan-ump"
-version = "0.1.1"
+version = "1.3.0"
 description = "Unified Model Pipeline for Zerolan Project"
 authors = ["AkagawaTsurunaki <AkagawaTsurunaki@outlook.com>"]
 readme = "README.md"
