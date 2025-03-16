@@ -1,3 +1,4 @@
+import os.path
 from http import HTTPStatus
 from typing import Literal
 
@@ -51,11 +52,14 @@ class ASRPipeline(CommonModelPipeline):
 
     def parse_query(self, query: ASRQuery | ASRStreamQuery) -> tuple:
         if isinstance(query, ASRQuery):
-            files = {"audio": open(query.audio_path, 'rb')}
+            files = None
+            if os.path.exists(query.audio_path):
+                files = {"audio": open(query.audio_path, 'rb')}
             data = {"json": query.model_dump_json()}
 
             return files, data
         elif isinstance(query, ASRStreamQuery):
+            assert os.path.exists(query.audio_path)
             files = {"audio": query.audio_data}
             query.audio_data = ""
             data = {"json": query.model_dump_json()}
