@@ -59,7 +59,7 @@ class ASRPipeline(CommonModelPipeline):
 
             return files, data
         elif isinstance(query, ASRStreamQuery):
-            assert os.path.exists(query.audio_path)
+            assert len(query.audio_data) > 0
             files = {"audio": query.audio_data}
             query.audio_data = ""
             data = {"json": query.model_dump_json()}
